@@ -1,0 +1,11 @@
+# Trained ML models
+*.pkl
+*.h5
+*.joblib
+
+# Large datasets
+*.csv
+
+# Python cache
+__pycache__/
+.ipynb_checkpoints/
