@@ -1,15 +1,8 @@
-numpy
+streamlit
 pandas
+numpy
 scikit-learn
 matplotlib
-seaborn
-
-tensorflow
-keras
-
 joblib
-tqdm
-
-jupyter
-notebook
+gdown
 

@@ -4,21 +4,35 @@ import numpy as np
 import joblib
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
+import os
+import gdown  # pip install gdown
+
+# -----------------------------
+# Download model if not present
+# -----------------------------
+MODEL_PATH = "crime_rate_model.pkl"
+MODEL_URL = "YOUR_GOOGLE_DRIVE_FILE_ID_OR_LINK"  # replace with your model link
+
+if not os.path.exists(MODEL_PATH):
+    st.info("Downloading trained model...")
+    gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
+    st.success("Model downloaded!")
 
 # -----------------------------
 # Load trained model
 # -----------------------------
-saved = joblib.load("crime_rate_model.pkl")
+saved = joblib.load(MODEL_PATH)
 model = saved["model"]
 features = saved["features"]
 category_columns = saved["category_columns"]
 
+# -----------------------------
+# Streamlit UI
+# -----------------------------
 st.title("🔮 Multi-Category Crime Rate Prediction - Next 60 Days")
 st.write("Select one or more crime categories to predict the next 60 days of crime counts starting from tomorrow.")
 
-# -----------------------------
 # Multi-category selection
-# -----------------------------
 category_names = [c.replace("Crime_Category_", "") for c in category_columns]
 crime_choices = st.multiselect("Select Crime Categories", category_names, default=[category_names[0]])
 
@@ -39,7 +53,7 @@ if st.button("Predict"):
             "DayOfWeek": future_dates.weekday
         })
 
-        # Create a figure for plotting
+        # Create figure for plotting
         fig, ax = plt.subplots(figsize=(12, 5))
 
         # Dataframe to collect all predictions
@@ -87,5 +101,6 @@ if st.button("Predict"):
         st.download_button("Download Predictions CSV", csv, "next_60_days_prediction.csv")
 
         st.success("Prediction completed! Dates start from tomorrow.")
+
 
 
