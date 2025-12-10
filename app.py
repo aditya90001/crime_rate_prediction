@@ -5,20 +5,27 @@ import joblib
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import os
-import gdown  # pip install gdown
+import requests
 
 # -----------------------------
 # Config: Model download
 # -----------------------------
 MODEL_PATH = "crime_rate_model.pkl"
-# Replace FILE_ID with your actual Google Drive file ID
-MODEL_URL = "https://drive.google.com/uc?id=YOUR_FILE_ID"
+# Replace with the raw GitHub link to your model (must be public or via GitHub LFS)
+MODEL_URL = "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/crime_rate_model.pkl"
 
 # Download model if not present
 if not os.path.exists(MODEL_PATH):
     st.info("Downloading trained model...")
-    gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
-    st.success("Model downloaded!")
+    r = requests.get(MODEL_URL, stream=True)
+    if r.status_code == 200:
+        with open(MODEL_PATH, "wb") as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
+        st.success("Model downloaded successfully!")
+    else:
+        st.error("Failed to download model. Please check MODEL_URL.")
+        st.stop()
 
 # -----------------------------
 # Load trained model
@@ -103,6 +110,7 @@ if st.button("Predict"):
         st.download_button("Download Predictions CSV", csv, "next_60_days_prediction.csv")
 
         st.success("Prediction completed! Dates start from tomorrow.")
+
 
 
 
