@@ -8,11 +8,13 @@ import os
 import gdown  # pip install gdown
 
 # -----------------------------
-# Download model if not present
+# Config: Model download
 # -----------------------------
 MODEL_PATH = "crime_rate_model.pkl"
-MODEL_URL = "YOUR_GOOGLE_DRIVE_FILE_ID_OR_LINK"  # replace with your model link
+# Replace FILE_ID with your actual Google Drive file ID
+MODEL_URL = "https://drive.google.com/uc?id=YOUR_FILE_ID"
 
+# Download model if not present
 if not os.path.exists(MODEL_PATH):
     st.info("Downloading trained model...")
     gdown.download(MODEL_URL, MODEL_PATH, quiet=False)
@@ -53,7 +55,7 @@ if st.button("Predict"):
             "DayOfWeek": future_dates.weekday
         })
 
-        # Create figure for plotting
+        # Figure for plotting
         fig, ax = plt.subplots(figsize=(12, 5))
 
         # Dataframe to collect all predictions
@@ -101,6 +103,7 @@ if st.button("Predict"):
         st.download_button("Download Predictions CSV", csv, "next_60_days_prediction.csv")
 
         st.success("Prediction completed! Dates start from tomorrow.")
+
 
 
 
